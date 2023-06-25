@@ -1,5 +1,5 @@
 class ServiceTypesController < ApplicationController
-  before_action :set_service_type, only: %i[ show edit update destroy ]
+  before_action :set_service_type, only: %i[show edit update destroy]
 
   # GET /service_types or /service_types.json
   def index
@@ -25,7 +25,7 @@ class ServiceTypesController < ApplicationController
 
     respond_to do |format|
       if @service_type.save
-        format.html { redirect_to @service_type, notice: "Service type was successfully created." }
+        format.html { redirect_to @service_type, notice: 'Service type was successfully created.' }
         format.json { render :show, status: :created, location: @service_type }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class ServiceTypesController < ApplicationController
   def update
     respond_to do |format|
       if @service_type.update(service_type_params)
-        format.html { redirect_to @service_type, notice: "Service type was successfully updated." }
+        format.html { redirect_to @service_type, notice: 'Service type was successfully updated.' }
         format.json { render :show, status: :ok, location: @service_type }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -51,19 +51,20 @@ class ServiceTypesController < ApplicationController
   def destroy
     @service_type.destroy
     respond_to do |format|
-      format.html { redirect_to service_types_url, notice: "Service type was successfully destroyed." }
+      format.html { redirect_to service_types_url, notice: 'Service type was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_service_type
-      @service_type = ServiceType.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def service_type_params
-      params.require(:service_type).permit(:name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_service_type
+    @service_type = ServiceType.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def service_type_params
+    params.require(:service_type).permit(:name)
+  end
 end

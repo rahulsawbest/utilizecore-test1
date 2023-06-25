@@ -23,7 +23,7 @@
 
   <div class="field">
     <%= form.label :service_type_id %>
-    <%= form.select :service_type_id, @service_types %>
+    <%= form.collection_select :service_type_id, ServiceType.all, :id, :name %>
   </div>
 
   <div class="field">
@@ -32,15 +32,47 @@
   </div>
 
   <div class="field">
-    <%= form.label :sender_id %>
-    <%= form.select :sender_id, @users %>
-    <%= link_to 'New Sender', new_user_path %>
+    <%= form.fields_for :sender do |sender_fields| %>
+      <%= sender_fields.label :full_name %>
+      <%= sender_fields.text_field :full_name %>
+    <% end %>
+
+    <%= form.fields_for :sender do |sender_fields| %>
+      <%= sender_fields.label :address %>
+      <%= sender_fields.text_area :address %>
+    <% end %>
+
+    <%= form.fields_for :sender do |sender_fields| %>
+      <%= sender_fields.label :mobile %>
+      <%= sender_fields.text_field :mobile %>
+    <% end %>
+
+    <%= form.fields_for :sender do |sender_fields| %>
+      <%= sender_fields.label :pincode %>
+      <%= sender_fields.text_field :pincode %>
+    <% end %>
   </div>
 
   <div class="field">
-    <%= form.label :receiver_id %>
-    <%= form.select :receiver_id, @users %>
-    <%= link_to 'New Receiver', new_user_path %>
+    <%= form.fields_for :receiver do |receiver_fields| %>
+      <%= receiver_fields.label :full_name %>
+      <%= receiver_fields.text_field :full_name %>
+    <% end %>
+
+    <%= form.fields_for :receiver do |receiver_fields| %>
+      <%= receiver_fields.label :address %>
+      <%= receiver_fields.text_area :address %>
+    <% end %>
+
+    <%= form.fields_for :receiver do |receiver_fields| %>
+      <%= receiver_fields.label :mobile %>
+      <%= receiver_fields.text_field :mobile %>
+    <% end %>
+
+    <%= form.fields_for :receiver do |receiver_fields| %>
+      <%= receiver_fields.label :pincode %>
+      <%= receiver_fields.text_field :pincode %>
+    <% end %>
   </div>
 
   <div class="field">
@@ -52,3 +84,4 @@
     <%= form.submit %>
   </div>
 <% end %>
+

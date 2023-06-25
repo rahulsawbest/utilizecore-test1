@@ -1,9 +1,9 @@
 class SearchController < ApplicationController
   def index
-    if params[:search].present?
-      @parcels = Parcel.where(id: params[:search])
-    else
-      @parcels = []
-    end
+    @parcels = if params[:tracking_number].present?
+                 Parcel.where(tracking_number: params[:tracking_number])
+               else
+                 []
+               end
   end
 end

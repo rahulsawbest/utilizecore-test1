@@ -1,5 +1,6 @@
 class ParcelsController < ApplicationController
-  before_action :set_parcel, only: %i[ show edit update destroy ]
+  before_action :set_parcel, only: %i[show edit update destroy]
+  before_action :load_users_and_service_types, only: %i[new edit]
 
   # GET /parcels or /parcels.json
   def index
@@ -13,14 +14,12 @@ class ParcelsController < ApplicationController
   # GET /parcels/new
   def new
     @parcel = Parcel.new
-    @users = User.all.map{|user| [user.name_with_address, user.id]}
-    @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]}
+    @parcel.build_sender
+    @parcel.build_receiver
   end
 
   # GET /parcels/1/edit
   def edit
-    @users = User.all.map{|user| [user.name_with_address, user.id]}
-    @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]}
   end
 
   # POST /parcels or /parcels.json
@@ -28,15 +27,11 @@ class ParcelsController < ApplicationController
     @parcel = Parcel.new(parcel_params)
 
     respond_to do |format|
-      if @parcel.save
+      if @parcel.valid? && @parcel.save
         format.html { redirect_to @parcel, notice: 'Parcel was successfully created.' }
         format.json { render :show, status: :created, location: @parcel }
       else
-        format.html do
-          @users = User.all.map{|user| [user.name_with_address, user.id]}
-          @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]} 
-          render :new, status: :unprocessable_entity
-        end
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @parcel.errors, status: :unprocessable_entity }
       end
     end
@@ -65,15 +60,24 @@ class ParcelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_parcel
-      @parcel = Parcel.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def parcel_params
-      params.require(:parcel).permit(:weight, :status, :service_type_id,
-                                     :payment_mode, :sender_id, :receiver_id,
-                                     :cost)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_parcel
+    @parcel = Parcel.find(params[:id])
+  end
+
+  # using before action for common code
+  def load_users_and_service_types
+    @users = User.pluck(:name_with_address, :id)
+    @service_types = ServiceType.pluck(:name, :id)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def parcel_params
+    params.require(:parcel).permit(
+      :weight, :status, :service_type_id, :payment_mode, :cost, :tracking_number,
+      sender_attributes: %i[id name address mobile pincode],
+      receiver_attributes: %i[id name address mobile pincode]
+    )
+  end
 end
