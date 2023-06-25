@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
+  before_action :authenticate_admin!, only: %i[new create destroy]
+  before_action :authenticate_sender!, only: %i[edit update]
+  before_action :authenticate_receiver!, only: %i[index show]
 
   # GET /users or /users.json
   def index
@@ -69,5 +72,29 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :email, address_attributes: %i[address_line_one address_line_two
                                                                        city state country
                                                                        pincode mobile_number])
+  end
+
+  # Authentication for Admin user
+  def authenticate_admin!
+    unless current_user && current_user.admin?
+      flash[:alert] = 'You are not authorized to perform this action.'
+      redirect_to root_path
+    end
+  end
+
+  # Authentication for Sender user
+  def authenticate_sender!
+    unless current_user && current_user.sender?
+      flash[:alert] = 'You are not authorized to perform this action as a sender.'
+      redirect_to root_path
+    end
+  end
+
+  # Authentication for Receiver user
+  def authenticate_receiver!
+    unless current_user && current_user.receiver?
+      flash[:alert] = 'You are not authorized to perform this action as a receiver.'
+      redirect_to root_path
+    end
   end
 end

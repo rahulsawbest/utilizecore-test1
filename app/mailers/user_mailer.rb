@@ -6,6 +6,6 @@ class UserMailer < ApplicationMailer
     @sender = @parcel.sender
     @receiver = @parcel.receiver
     @url = 'http://localhost:3000/search'
-    mail(to: @receiver.email, cc: @sender.email, subject: 'New Parcel Information Tracking Number')
+    mail(to: @receiver.email, cc: @sender.email, subject: 'Parcel Information')
   end
 end

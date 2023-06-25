@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :address
 
+  enum role: { admin: 'admin', sender: 'sender', receiver: 'receiver' }
+
   def name_with_address
     @name_with_address ||= [name, address.address_line_one, address.city, address.state, address.country,
                             address.pincode].join('-')

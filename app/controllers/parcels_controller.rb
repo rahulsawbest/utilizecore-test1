@@ -1,6 +1,7 @@
 class ParcelsController < ApplicationController
   before_action :set_parcel, only: %i[show edit update destroy]
   before_action :load_users_and_service_types, only: %i[new edit]
+  before_action :authenticate_admin!, only: %i[edit update]
 
   # GET /parcels or /parcels.json
   def index
@@ -41,7 +42,10 @@ class ParcelsController < ApplicationController
   def update
     respond_to do |format|
       if @parcel.update(parcel_params)
-        format.html { redirect_to @parcel, notice: 'Parcel was successfully updated.' }
+        # Send email notifications to the sender and receiver
+        UserMailer.status_email(@parcel).deliver_now
+
+        format.html { redirect_to @parcel, notice: 'Parcel status was successfully updated.' }
         format.json { render :show, status: :ok, location: @parcel }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -79,5 +83,10 @@ class ParcelsController < ApplicationController
       sender_attributes: %i[id name address mobile pincode],
       receiver_attributes: %i[id name address mobile pincode]
     )
+  end
+
+  # Check if the current user is an admin
+  def authenticate_admin!
+    redirect_to root_path, alert: 'Access denied.' unless current_user.admin?
   end
 end

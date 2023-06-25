@@ -7,6 +7,7 @@
     <h1>Welcome to Courier Service, <%= @receiver.name %></h1>
     <p>
       A Parcel is send to you by: <%= @sender.name %>. Use this ID: <%= @parcel.tracking_number %> to track it.<br>
+      Parcel Current Status: <%= @parcel.status %> 
     </p>
     <p>
       Visit link: <%= @url %>.

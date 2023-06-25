@@ -1,4 +1,5 @@
 class ServiceTypesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_service_type, only: %i[show edit update destroy]
 
   # GET /service_types or /service_types.json
@@ -66,5 +67,9 @@ class ServiceTypesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def service_type_params
     params.require(:service_type).permit(:name)
+  end
+
+  def authenticate_user!
+    redirect_to root_path, alert: 'Access denied.' unless current_user
   end
 end

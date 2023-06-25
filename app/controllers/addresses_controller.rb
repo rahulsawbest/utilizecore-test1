@@ -1,4 +1,5 @@
 class AddressesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_address, only: %i[show edit update destroy]
 
   # GET /addresses or /addresses.json
@@ -67,5 +68,9 @@ class AddressesController < ApplicationController
   def address_params
     params.require(:address).permit(:address_line_one, :address_line_two, :city, :state, :country, :pincode,
                                     :mobile_number, :user_id)
+  end
+
+  def authenticate_user!
+    redirect_to root_path, alert: 'Access denied.' unless current_user
   end
 end

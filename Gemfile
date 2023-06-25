@@ -27,6 +27,10 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'sidekiq'
 gem 'pg', '~> 1.2', '>= 1.2.3'
+gem 'axlsx'  # Added this line for Excel report generation
+gem 'axlsx_rails'  # Added this line for Excel report generation
+gem 'whenever', require: false  # Add this line for task scheduling
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
